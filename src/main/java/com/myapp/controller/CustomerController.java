@@ -74,7 +74,7 @@ public class CustomerController {
 					if(ordersAmount<50)
 						awards = 0;
 					else if(ordersAmount>50 && ordersAmount <=100)
-						awards = 50;
+						awards = ordersAmount-50;
 					else if(ordersAmount >100)
 						awards =(2*(ordersAmount-100))+50;
 					
