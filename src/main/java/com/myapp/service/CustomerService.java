@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.myapp.exceptions.NoRecordFoundException;
@@ -21,10 +22,22 @@ public class CustomerService {
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	@Value("${customer.calcu.ld100}")
+    private Long ld100;
+	
+	@Value("${customer.calcu.gd100}")
+    private Long gd100;
+	
+	@Value("${customer.calcu.limit1}")
+    private Long limit1;
+	
+	@Value("${customer.calcu.limit2}")
+    private Long limit2;
+	
 	public List<Customer> findAll() {
 
 		List<Customer> customerDtoList =customerRepository.findAll();
-		if(customerDtoList!=null || customerDtoList.size()==0) {
+		if(customerDtoList==null || customerDtoList.size()==0) {
 			throw new NoRecordFoundException();
 		}
 		return customerDtoList;
@@ -33,10 +46,11 @@ public class CustomerService {
 	public Map<String, Object> getPointsReport() {
 
 		Map<String, Object> returnMap = new HashMap<String, Object>(); 
-
+		
+		
 
 		List<Customer> customerDtoList =   findAll();
-		if(customerDtoList!=null || customerDtoList.size()==0) {
+		if(customerDtoList==null || customerDtoList.size()==0) {
 			throw new NoRecordFoundException();
 		}
 
@@ -57,29 +71,34 @@ public class CustomerService {
 
 		Iterator<String> iterator3 = ordersByUsers.keySet().iterator();
 		HashMap<String, Object> mapList2= new HashMap<String, Object>();
-		Integer awards=0;
+		Long awards=0l;
+		
+		
 		while (iterator3.hasNext()) {
 			String userName = iterator3.next();
 			ordersByUsersMonthly =  ordersByUsers.get(userName).stream().collect(Collectors.groupingBy(Customer::getMonth));
 			Iterator<String> iterator4 = ordersByUsersMonthly.keySet().iterator();
-			Map<String, Integer> map4 = new HashMap<String, Integer>();
+			Map<String, Long> map4 = new HashMap<String, Long>();
 			HashMap<String, Object> mapList4= new HashMap<String, Object>();
 			while (iterator4.hasNext()) {
 				String month = iterator4.next();
-				map4 =ordersByUsersMonthly.get(month).stream().collect(Collectors.groupingBy(Customer::getMonth, Collectors.summingInt(Customer::getOrderAmount)));
+				map4 =ordersByUsersMonthly.get(month).stream().collect(Collectors.groupingBy(Customer::getMonth, Collectors.summingLong(Customer::getOrderAmount)));
 
 				Iterator<String> iterator5 = map4.keySet().iterator();
+				
+				
 				while (iterator5.hasNext()) {
 					String monthName = iterator5.next();
-					Integer ordersAmount = map4.get(monthName);
-					awards=0;
-					if(ordersAmount<50)
-						awards = 0;
-					else if(ordersAmount>50 && ordersAmount <=100) 
-						awards = ordersAmount-50;
-					else if(ordersAmount >100)
-						awards =(2*(ordersAmount-100))+50;
-
+					Long ordersAmount = map4.get(monthName);
+					awards=0l;
+					if(ordersAmount<limit1)
+						awards = 0l;
+					else if(ordersAmount>50 && ordersAmount <=limit2) {
+						awards = ((ordersAmount-50) *ld100);
+					}
+					else if(ordersAmount >limit2) {
+						awards =((gd100*(ordersAmount-limit2))+limit2);
+					}
 					map4.put("Points", awards);
 				}				
 				mapList4.put(month, map4);				
@@ -92,10 +111,12 @@ public class CustomerService {
 		return returnMap;
 	}
 
-
-
 	public Optional<Customer> findById(Long id) {
-		return customerRepository.findById(id);
+		Optional <Customer> customerOptional =customerRepository.findById(id);
+		if(!customerOptional.isPresent()) {
+			throw new NoRecordFoundException();
+		}
+		return customerOptional;
 	}
 
 	public Customer save(Customer customer) {

@@ -40,21 +40,25 @@ public class CustomerController {
     private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
     
     
+    
+    
     @GetMapping("/pointsReport")
     public Map<String, Object> getPointsReport() {
-    	log.info("");
+    	log.info("Getting Point reports end point..");
     	return customerkService.getPointsReport();
     }
     @GetMapping("/all")
     public List<Customer> findAll() {
     	
-    	
-    	List<Customer> customerDtoList =   customerkService.findAll();
-    	return customerDtoList;
+    	log.info("Getting All customers details..");
+    	List<Customer> customerList =   customerkService.findAll();
+    	log.info("Getting All customers details, customerList Size : .."+customerList.size());
+    	return customerList;
     }
 
     @GetMapping("/{id}")
     public Optional<Customer> findById(@PathVariable Long id) {
+    	log.info("Getting customers details for the ID "+id);
         return customerkService.findById(id);
     }
 
@@ -62,12 +66,14 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED) // 201
     @PostMapping
     public Customer create(@RequestBody Customer customer) {
+    	log.info("In inserting customers details, Customer Nam  "+customer.getName());
         return customerkService.save(customer);
     }
 
     // update a customer
     @PutMapping
     public Customer update(@RequestBody Customer customer) {
+    	log.info("In updating customers details, Customer Nam  "+customer.getName());
         return customerkService.save(customer);
     }
 
@@ -75,31 +81,35 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.NO_CONTENT) // 204
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {
+    	log.info("In Deleting  customers details, Customer id  "+id);
         customerkService.deleteById(id);
     }
 
     @GetMapping("/find/title/{title}")
-    public List<Customer> findByTitle(@PathVariable String title) {
-        return customerkService.findByName(title);
+    public List<Customer> findByTitle(@PathVariable String name) {
+    	log.info("In Finding customers details by Name , Customer Name "+name);
+        return customerkService.findByName(name);
     }
 
     @GetMapping("/find/date-after/{date}")
     public List<Customer> findByOrderDateAfter(
             @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    	log.info("In fet customers details after the order date, Date"+date);
         return customerkService.findBydDateAfter(date);
     }
 
     
-    @ExceptionHandler(NoRecordFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public ErrorResponse handleNoRecordFoundException(NoRecordFoundException ex) {
-
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setMessage("No Record Found !");
-        return errorResponse;
-    }
-    
+	/*
+	 * @ExceptionHandler(NoRecordFoundException.class)
+	 * 
+	 * @ResponseStatus(HttpStatus.NOT_FOUND)
+	 * 
+	 * @ResponseBody public ErrorResponse
+	 * handleNoRecordFoundException(NoRecordFoundException ex) {
+	 * 
+	 * ErrorResponse errorResponse = new ErrorResponse();
+	 * errorResponse.setMessage("No Record Found !"); return errorResponse; }
+	 */
     
     
 }

@@ -47,9 +47,7 @@ public class CustomerControllerTest {
     // static, all tests share this postgres container
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            "postgres:15-alpine"
-    );
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine");
 
     @BeforeEach
     void setUp() {
@@ -57,18 +55,10 @@ public class CustomerControllerTest {
         RestAssured.baseURI = "http://localhost:" + port;
         customerRepository.deleteAll();
 
-        Customer b1 = new Customer("Customer A",
-                10,
-                LocalDate.of(2023, 8, 31));
-        Customer b2 = new Customer("Customer B",
-                20,
-                LocalDate.of(2023, 7, 31));
-        Customer b3 = new Customer("Customer C",
-                30,
-                LocalDate.of(2023, 6, 10));
-        Customer b4 = new Customer("Customer D",
-                40,
-                LocalDate.of(2023, 5, 5));
+        Customer b1 = new Customer("Customer A", 10, LocalDate.of(2023, 8, 31));
+        Customer b2 = new Customer("Customer B", 20, LocalDate.of(2023, 7, 31));
+        Customer b3 = new Customer("Customer C", 30, LocalDate.of(2023, 6, 10));
+        Customer b4 = new Customer("Customer D", 40, LocalDate.of(2023, 5, 5));
 
         customerRepository.saveAll(List.of(b1, b2, b3, b4));
     }

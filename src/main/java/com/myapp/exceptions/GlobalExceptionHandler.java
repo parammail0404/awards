@@ -14,7 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NoRecordFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	//@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ResponseBody
 	public ErrorResponse handleNoRecordFoundException(NoRecordFoundException ex) 
 	{
@@ -30,6 +30,14 @@ public class GlobalExceptionHandler {
 		System.out.println("Bad Request");
 		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
+
+
+	@ExceptionHandler(EmployeeNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<String> handleEmployeeNotFound( EmployeeNotFoundException exception ) {
+		return ResponseEntity .status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+	}
+
 	/*
 	 * // handle specific exceptions
 	 * 
@@ -41,6 +49,6 @@ public class GlobalExceptionHandler {
 	 * ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND); }
 	 */
 
-	 
+
 
 }

@@ -44,7 +44,7 @@ public class MainApplication {
 			Customer b5 = new Customer("User2", 55, LocalDate.of(2024, 6, 01));
 			Customer b6 = new Customer("User2", 110, LocalDate.of(2024, 6, 05));
 			Customer b7 = new Customer("User2", 220, LocalDate.of(2024, 8, 10));
-			Customer b8 = new Customer("User2", 320, LocalDate.of(2024, 9, 25));
+			Customer b8 = new Customer("User2", 320, LocalDate.of(2024, 9, 25)); 
 			
 
 			Customer b9 = new  Customer("User3", 150, LocalDate.of(2024, 6, 01));
@@ -55,7 +55,7 @@ public class MainApplication {
 
 
 
-//			customerRepository.saveAll(List.of(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12));
+			customerRepository.saveAll(List.of(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12));
 			log.info("Default records inserted ");
 		};
 	}
