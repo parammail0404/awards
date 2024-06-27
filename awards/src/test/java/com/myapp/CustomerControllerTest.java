@@ -53,7 +53,6 @@ public class CustomerControllerTest {
 
     @BeforeEach
     void setUp() {
-    	System.out.println(port);
         RestAssured.baseURI = "http://localhost:" + port;
         customerRepository.deleteAll();
 

@@ -55,7 +55,7 @@ public class MainApplication {
 
 
 
-//			customerRepository.saveAll(List.of(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12));
+			customerRepository.saveAll(List.of(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12));
 			log.info("Default records inserted ");
 		};
 	}
