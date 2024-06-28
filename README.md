@@ -1,4 +1,4 @@
-On starting up the application, the Test date was inserted in the database.
+On starting up the application, the Test date inserted in the database.
 Login authentication added with admin/admin.
 service Endpoints:
 	http://localhost:8080/customer/pointsReport
