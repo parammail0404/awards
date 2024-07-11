@@ -16,6 +16,7 @@ public class Customer {
     private Integer orderAmount;
     private LocalDate orderDate;
     private String month;
+    private Long award =0l;
     // for JPA only, no use
     public Customer() {
     }
@@ -77,9 +78,15 @@ public class Customer {
 		this.month = month;
 	}
 
+	public Long getAward() {
+		
+		return award;
+	}
 
-    
-    
-    
+	public void setAward(Long award) {
+		this.award = award;
+	}
+
+
     
 }
