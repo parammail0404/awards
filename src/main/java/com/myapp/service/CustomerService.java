@@ -54,7 +54,7 @@ public class CustomerService {
 		if(customerDtoList==null || customerDtoList.size()==0) {
 			throw new NoRecordFoundException();
 		}
-		customerDtoList.forEach(customer -> customer.setAward(Long.valueOf(customer.getOrderAmount().longValue())));
+		customerDtoList.forEach(customer -> customer.setAward(calculateAwards(Long.valueOf(customer.getOrderAmount().longValue()))));
 //		calculateAwards(ordersAmount)  Long.valueOf(i.longValue())
 
 		Map<String, List<Customer>> ordersByUsers = customerDtoList.stream().collect(Collectors.groupingBy(Customer::getName));
@@ -65,11 +65,11 @@ public class CustomerService {
 		Map<String, List<Customer>> ordersByUsersMonthly;
 		HashMap<String, Object> mapList= new HashMap<String, Object>();		
 
-		while (iterator2.hasNext()) {
-			String userName = iterator2.next();
-			ordersByUsersMonthly =  ordersByUsers.get(userName).stream().collect(Collectors.groupingBy(Customer::getMonth));			
-			mapList.put(userName, ordersByUsersMonthly);
-		}
+//		while (iterator2.hasNext()) {
+//			String userName = iterator2.next();
+//			ordersByUsersMonthly =  ordersByUsers.get(userName).stream().collect(Collectors.groupingBy(Customer::getMonth));			
+//			mapList.put(userName, ordersByUsersMonthly);
+//		}
 
 
 		Iterator<String> iterator3 = ordersByUsers.keySet().iterator();
@@ -98,7 +98,7 @@ public class CustomerService {
 			}
 			mapList2.put(userName, mapList4);
 		}
-		returnMap.put("OrderDetails", mapList);
+		returnMap.put("OrderDetails", customerDtoList);
 		returnMap.put("TotalOrderAmtPoint", mapList2);
 
 		return returnMap;
@@ -136,11 +136,9 @@ public class CustomerService {
 		else if(orderAmount>50 && orderAmount <=limit2) {
 			awards = ((orderAmount-50) *ld100);
 		}
-		else if(orderAmount >limit2) {
-			awards =((gd100*(orderAmount-limit2))+limit2);
+		else if(orderAmount >limit2) {			
+			awards =((gd100*(orderAmount-limit2))+limit1);
 		}
-		System.out.println(orderAmount +"   "+awards +" "+limit1);
-		
 		return awards;
 	}
 }
