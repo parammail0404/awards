@@ -40,6 +40,7 @@ public class CustomerService {
 		if(customerDtoList==null || customerDtoList.size()==0) {
 			throw new NoRecordFoundException();
 		}
+		customerDtoList.forEach(customer -> customer.setAward(calculateAwards(Long.valueOf(customer.getOrderAmount().longValue()))));
 		return customerDtoList;
 	}
 
@@ -53,9 +54,11 @@ public class CustomerService {
 		if(customerDtoList==null || customerDtoList.size()==0) {
 			throw new NoRecordFoundException();
 		}
-
+		customerDtoList.forEach(customer -> customer.setAward(Long.valueOf(customer.getOrderAmount().longValue())));
+//		calculateAwards(ordersAmount)  Long.valueOf(i.longValue())
 
 		Map<String, List<Customer>> ordersByUsers = customerDtoList.stream().collect(Collectors.groupingBy(Customer::getName));
+		
 		//		returnMap.put("ordersByUserWiseList", ordersByUsers);
 
 		Iterator<String> iterator2 = ordersByUsers.keySet().iterator();
@@ -71,8 +74,6 @@ public class CustomerService {
 
 		Iterator<String> iterator3 = ordersByUsers.keySet().iterator();
 		HashMap<String, Object> mapList2= new HashMap<String, Object>();
-		Long awards=0l;
-		
 		
 		while (iterator3.hasNext()) {
 			String userName = iterator3.next();
@@ -90,16 +91,8 @@ public class CustomerService {
 				while (iterator5.hasNext()) {
 					String monthName = iterator5.next();
 					Long ordersAmount = map4.get(monthName);
-					awards=0l;
-					if(ordersAmount<limit1)
-						awards = 0l;
-					else if(ordersAmount>50 && ordersAmount <=limit2) {
-						awards = ((ordersAmount-50) *ld100);
-					}
-					else if(ordersAmount >limit2) {
-						awards =((gd100*(ordersAmount-limit2))+limit2);
-					}
-					map4.put("Points", awards);
+					
+					map4.put("Points", calculateAwards(ordersAmount));
 				}				
 				mapList4.put(month, map4);				
 			}
@@ -134,5 +127,20 @@ public class CustomerService {
 
 	public List<Customer> findBydDateAfter(LocalDate date) {
 		return customerRepository.findByDateAfter(date);
+	}
+	public Long calculateAwards(Long orderAmount) {
+		Long awards=0l;
+		
+		if(orderAmount<limit1)
+			awards = 0l;
+		else if(orderAmount>50 && orderAmount <=limit2) {
+			awards = ((orderAmount-50) *ld100);
+		}
+		else if(orderAmount >limit2) {
+			awards =((gd100*(orderAmount-limit2))+limit2);
+		}
+		System.out.println(orderAmount +"   "+awards +" "+limit1);
+		
+		return awards;
 	}
 }
